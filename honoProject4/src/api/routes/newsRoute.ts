@@ -5,7 +5,7 @@ const newsService = new NewsManager();
 const app = new Hono();
 
 app.get("/", async (c:Context) => {
-    console.log(`newsRoute.ts: app.get("/")`);
+    console.log(`newsRoute.app.get("/")`);
     
     const news = await newsService.GetAll();
     const data = {
@@ -17,6 +17,8 @@ app.get("/", async (c:Context) => {
 });
 
 app.get("/:id", async (c:Context) => {
+    console.log(`newsRoute.app.get("/:id")`);
+
     const id = c.req.param("id");
     const news = await newsService.GetById(id);
     const data = {
@@ -28,6 +30,8 @@ app.get("/:id", async (c:Context) => {
 });
 
 app.post("/", async (c:Context) => {
+    console.log(`newsRoute.app.post("/")`);
+
     const news = await c.req.json();
     const newNews = await newsService.Add(news);
     const data = {
@@ -39,6 +43,7 @@ app.post("/", async (c:Context) => {
 });
 
 app.put("/:id", async (c:Context) => {
+    console.log(`newsRoute.app.put("/:id")`)
     const id = c.req.param("id");
     const news = await c.req.json();
     const updatedNews = await newsService.Update(id, news);
@@ -51,6 +56,8 @@ app.put("/:id", async (c:Context) => {
 });
 
 app.delete("/:id", async (c:Context) => {
+    console.log(`newsRoute.app.delete("/:id")`);
+    
     const id = c.req.param("id");
     const deletedNews = await newsService.Delete(id);
     const data = {

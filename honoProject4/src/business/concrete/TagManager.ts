@@ -8,6 +8,6 @@ export default class TagManager extends BaseManager<Tag> implements ITagService 
     private _tagDal: ITagDal = new SqliteTagDal();
 
     constructor() {
-        super(SqliteTagDal, Tag);
+        super(SqliteTagDal, Tag, "ITagService");
     }
 }

@@ -12,5 +12,5 @@ export default abstract class Entity {
         this.deletedAt = undefined;
     }
 
-    abstract bindParameters(data: any): void;
+    abstract setProperties(data: any): void;
 }

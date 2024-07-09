@@ -8,6 +8,6 @@ export default class NewsManager extends BaseManager<News> implements INewsServi
     private _newsDal: INewsDal = new SqliteNewsDal();
 
     constructor() {
-        super(SqliteNewsDal, News);
+        super(SqliteNewsDal, News,"INewsService");
     }
 }

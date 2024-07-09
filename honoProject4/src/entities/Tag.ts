@@ -7,7 +7,7 @@ export default class Tag extends BaseEntity {
         super();
     }
 
-    bindParameters(data: any) {
+    setProperties(data: any) {
         this.name = data.name;
         this.description = data.description;
     }
