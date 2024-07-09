@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export default class Entity {
+export default abstract class Entity {
     id: string;
     createdAt: string;
     updatedAt?: string;
@@ -11,4 +11,6 @@ export default class Entity {
         this.updatedAt = undefined;
         this.deletedAt = undefined;
     }
+
+    abstract bindParameters(data: any): void;
 }

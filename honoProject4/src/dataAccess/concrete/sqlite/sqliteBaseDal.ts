@@ -21,11 +21,9 @@
       this.getAllStatement = `SELECT * FROM ${this.tableName}`;
     }
 
-    async create(data: T): Promise<any> {
-      console.log(this.insertStatement);
-      
+    async create(data: T): Promise<any> {     
       const statement = this.db.prepare(this.insertStatement);
-      this.bindParameters(statement, data);
+      return this.bindParameters(statement, data);
     }
 
     async update(id: string, data: T): Promise<any> {
@@ -73,7 +71,7 @@
       return `CREATE TABLE IF NOT EXISTS ${this.tableName} (${columns})`;
     }
 
-    private bindParameters(statement: any, data: T, id?: string): void {
+    private bindParameters(statement: any, data: T, id?: string): any {
       const values: any[] = [];
       const columns = Object.keys(data as any);
 
@@ -94,6 +92,6 @@
         // Eğer id parametresi varsa, update işlemidir; id değerini sona ekliyoruz
         values.push(id);
       }
-      statement.run(values);
+      return statement.run(values);
     }
   }
