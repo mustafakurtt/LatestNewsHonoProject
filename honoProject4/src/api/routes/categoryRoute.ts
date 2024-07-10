@@ -2,18 +2,15 @@ import { Hono, Context } from "hono";
 import CategoryManager from "../../business/concrete/CategoryManager";
 import * as schemas from "../../validator/zvalidator/schemas/category/categoryValidationSchema";
 import { zValidator } from "@hono/zod-validator";
+import RouteResponse from "../../utils/routes/routeResponse";
 
 const categoryService = new CategoryManager();
 const app = new Hono();
 
 app.get("/", async (c: Context) => {
   const categories = await categoryService.GetAll();
-  const data = {
-    success: true,
-    data: categories,
-    time: new Date().toISOString(),
-  };
-  return c.json(categories);
+  const response = new RouteResponse(categories);
+  return c.json(response);
 });
 
 app.get(
@@ -22,12 +19,8 @@ app.get(
   async (c: Context) => {
     const id = c.req.param("id");
     const category = await categoryService.GetById(id);
-    const data = {
-      success: true,
-      data: category,
-      time: new Date().toISOString(),
-    };
-    return c.json(category);
+    const response = new RouteResponse(category);
+    return c.json(response);
   }
 );
 
@@ -37,12 +30,8 @@ app.post(
   async (c: Context) => {
     const category = await c.req.json();
     const newCategory = await categoryService.Add(category);
-    const data = {
-      success: true,
-      data: newCategory,
-      time: new Date().toISOString(),
-    };
-    return c.json(data);
+    const response = new RouteResponse(newCategory);
+    return c.json(response);
   }
 );
 
@@ -54,12 +43,8 @@ app.put(
     const id = c.req.param("id");
     const category = await c.req.json();
     const updatedCategory = await categoryService.Update(id, category);
-    const data = {
-      success: true,
-      data: updatedCategory,
-      time: new Date().toISOString(),
-    };
-    return c.json(data);
+    const response = new RouteResponse(updatedCategory);
+    return c.json(response);
   }
 );
 
@@ -69,12 +54,8 @@ app.delete(
   async (c: Context) => {
     const id = c.req.param("id");
     const deletedCategory = await categoryService.Delete(id);
-    const data = {
-      success: true,
-      data: deletedCategory,
-      time: new Date().toISOString(),
-    };
-    return c.json(data);
+    const response = new RouteResponse(deletedCategory);
+    return c.json(response);
   }
 );
 

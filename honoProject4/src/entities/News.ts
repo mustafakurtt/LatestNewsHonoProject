@@ -6,7 +6,7 @@ export default class News extends BaseEntity {
     title : string = "";
     content : string = "";
     categoryId : number = 0;
-    tags : Tag[] = [];
+    tagIds : Tag[] = [];
     imageUrl : string = "";
     constructor() {
         super();
@@ -16,7 +16,7 @@ export default class News extends BaseEntity {
         this.title = data.title;
         this.content = data.content;
         this.categoryId = data.categoryId;
-        this.tags = data.tags;
+        this.tagIds = data.tags;
         this.userId = data.userId;
         this.imageUrl = data.imageUrl;
     }

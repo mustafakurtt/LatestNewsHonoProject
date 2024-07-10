@@ -1,71 +1,53 @@
 import { Hono,Context } from "hono";
 import NewsManager from "../../business/concrete/NewsManager";
-
+import RouteResponse from "../../utils/routes/routeResponse";
+import { zValidator } from "@hono/zod-validator";
+import * as schemas from "../../validator/zvalidator/schemas/news/newsValidationSchema";
 const newsService = new NewsManager();
 const app = new Hono();
 
-app.get("/", async (c:Context) => {
-    console.log(`newsRoute.app.get("/")`);
-    
-    const news = await newsService.GetAll();
-    const data = {
-        success: true,
-        data: news,
-        time: new Date().toISOString()
-    }
-    return c.json(data);
+app.get("/news",async (c: Context) => {
+  const news = await newsService.GetAll();
+  const response = new RouteResponse(news);
+  return c.json(response);
 });
 
-app.get("/:id", async (c:Context) => {
-    console.log(`newsRoute.app.get("/:id")`);
-
-    const id = c.req.param("id");
-    const news = await newsService.GetById(id);
-    const data = {
-        success: true,
-        data: news,
-        time: new Date().toISOString()
-    }   
-    return c.json(data);
+app.get("/news/:id",
+    zValidator("param", schemas.getByIdNewsParamValidationSchema)
+    ,async (c: Context) => {
+  const id = c.req.param("id");
+  const news = await newsService.GetById(id);
+  const response = new RouteResponse(news);
+  return c.json(response);
 });
 
-app.post("/", async (c:Context) => {
-    console.log(`newsRoute.app.post("/")`);
-
-    const news = await c.req.json();
-    const newNews = await newsService.Add(news);
-    const data = {
-        success: true,
-        data: newNews,
-        time: new Date().toISOString()
-    }
-    return c.json(data);
+app.post("/news",
+    zValidator("json", schemas.createNewsJsonValidationSchema)
+    ,async (c: Context) => {
+  const news = await c.req.json();
+  const newNews = await newsService.Add(news);
+  const response = new RouteResponse(newNews);
+  return c.json(response);
 });
 
-app.put("/:id", async (c:Context) => {
-    console.log(`newsRoute.app.put("/:id")`)
-    const id = c.req.param("id");
-    const news = await c.req.json();
-    const updatedNews = await newsService.Update(id, news);
-    const data = {
-        success: true,
-        data: updatedNews,
-        time: new Date().toISOString()
-    }
-    return c.json(data);
+app.put("/news/:id", 
+    zValidator("json", schemas.updateNewsJsonValidationSchema),
+    zValidator("param", schemas.updateNewsParamValidationSchema),
+    async (c: Context) => {
+  const id = c.req.param("id");
+  const news = await c.req.json();
+  const updatedNews = await newsService.Update(id, news);
+  const response = new RouteResponse(updatedNews);
+  return c.json(response);
 });
 
-app.delete("/:id", async (c:Context) => {
-    console.log(`newsRoute.app.delete("/:id")`);
-    
-    const id = c.req.param("id");
-    const deletedNews = await newsService.Delete(id);
-    const data = {
-        success: true,
-        data: deletedNews,
-        time: new Date().toISOString()
-    }
-    return c.json(data);
+app.delete("/news/:id", 
+    zValidator("param", schemas.deleteNewsParamValidationSchema),
+    async (c: Context) => {
+  const id = c.req.param("id");
+  const deletedNews = await newsService.Delete(id);
+  const response = new RouteResponse(deletedNews);
+  return c.json(response);
 });
 
 export default app
