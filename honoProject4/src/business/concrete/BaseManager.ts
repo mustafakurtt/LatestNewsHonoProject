@@ -32,50 +32,22 @@ export default class BaseManager<T extends BaseEntity>
  
   async Update(id: string, entity: T): Promise<T | null> {
     console.log(`BaseManager.Update`);
-    const oldEntity = await this._entityDal.getById(id);
-    if (oldEntity === null) throw new BusinessError("Not Found",404,"BaseManager.update", "Entity not found")
-    const updatedEntity = this.updateProduct(oldEntity, entity);
-    return await this._entityDal.update(id, updatedEntity);
+    return await this._entityDal.update(id, entity);
   }
 
   async Delete(id: string): Promise<string | null> {
     console.log(`BaseManager.Delete`);
-    const entity = await this._entityDal.getById(id);
-    if (entity === null) throw new BusinessError("Not Found",404,"BaseManager.delete", "Entity not found")
     return await this._entityDal.delete(id);
   }
  
   async GetById(id: string): Promise<T | null> {
     console.log(`BaseManager.GetById`);
-
     const response = await this._entityDal.getById(id);
     return response;  
   }
 
   async GetAll(): Promise<T[]> {
     console.log(`BaseManager.GetAll`);
-
     return await this._entityDal.getAll();
-  }
-
-  private updateProduct(
-    oldProduct: T,
-    newProductData: Partial<Omit<T, "id" | "createdAt">>
-  ): T {
-    const updatedProduct = { ...oldProduct };
-
-    for (const key in newProductData) {
-      if (
-        newProductData.hasOwnProperty(key) &&
-        key !== "id" &&
-        key !== "createdAt" &&
-        key !== "updatedAt" &&
-        key !== "deletedAt"
-      ) {
-        (updatedProduct as any)[key] = (newProductData as any)[key];
-      }
-    }
-    (updatedProduct as any).updatedAt = new Date().toISOString();
-    return updatedProduct;
   }
 }

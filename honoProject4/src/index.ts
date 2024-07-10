@@ -12,8 +12,8 @@ app.route("/api/category",categoryRoute)
 app.route("/api/tag",tagRoute)
 app.onError((err, c) => {
     if (err instanceof BusinessError) {
-      const response = new DataResponse(false,err.message,err.data,err.statusCode)
-      return c.json(response,{status:err.statusCode});
+      const response = new DataResponse(false,err.message,err.data,err.code)
+      return c.json(response,{status: err.code});
     }
     console.error(`${err}`);
     const response = new DataResponse(false, "Internal Server Error", null);
